@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "557142079086",
+    "project_id": "kremot-c78cf",
+    "storage_bucket": "kremot-c78cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557142079086:android:ab02cfda029afc9254987f",
+        "android_client_info": {
+          "package_name": "com.kremot.kremot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "557142079086-4jnq14jfhr3c6i55d0a1pgchcpe55u1d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kremot.kremot",
+            "certificate_hash": "a494354317809840afaeb59afff11e2d41ff3b90"
+          }
+        },
+        {
+          "client_id": "557142079086-8i9ql00b6rr0k5h2jbjicort5ur9ee5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXj66GZW25VypV2rdzFIpDjDB7vysKnMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "557142079086-8i9ql00b6rr0k5h2jbjicort5ur9ee5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
