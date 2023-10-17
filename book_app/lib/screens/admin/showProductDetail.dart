@@ -1,0 +1,433 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:book_app/screens/user/bottomNavBar/showProductDetail.dart';
+import 'package:get/get.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'editProduct.dart';
+class ShowProductDetail extends StatefulWidget {
+  String categoryName;
+  @override
+  State<ShowProductDetail> createState() => _ShowProductDetailState();
+
+  ShowProductDetail(this.categoryName);
+}
+
+class _ShowProductDetailState extends State<ShowProductDetail> {
+  final searchController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    final docref = FirebaseFirestore.instance
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .id;
+
+    final userCollection = FirebaseFirestore.instance
+        .collection("category")
+        .doc(widget.categoryName)
+        .collection(widget.categoryName);
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset("assets/spl2.png",
+                width: MediaQuery.of(context).size.width * 0.1),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.05,
+            ),
+            Text("BOOK DETAIL")
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                onChanged: (v){
+                  setState(() {
+
+                  });
+                },
+                controller: searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search Book',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+            ),
+            StreamBuilder(
+                stream: userCollection.snapshots(),
+
+                builder:
+                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return Center(
+                        child: CircularProgressIndicator(
+
+                        ));
+                  }
+                  var docSnap =
+                      streamSnapshot.data!.docs;
+                  if(searchController.text.length>0){
+                    docSnap = docSnap.where((element) {
+                      return element
+                          .get('Book Name')
+                          .toString()
+                          .toLowerCase()
+                          .contains(searchController.text.toLowerCase());
+                    }).toList();
+                  }
+                  return Column(
+                    children: [
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: docSnap.length,
+                          padding: EdgeInsets.zero,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      MediaQuery.of(context)
+                                          .size
+                                          .width *
+                                          0.05,
+                                      MediaQuery.of(context)
+                                          .size
+                                          .height *
+                                          0.02,
+                                      MediaQuery.of(context)
+                                          .size
+                                          .width *
+                                          0.05,
+                                      0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ShowUSerProductDetail(
+                                                    docSnap[index].id,
+                                                    docref,
+                                                    docSnap[index][
+                                                    'Image URL'],
+                                                    docSnap[index][
+                                                    'Book Name'],
+                                                    docSnap[index]['MRP'],
+                                                    docSnap[index][
+                                                    'Discounted Price'],
+                                                    widget
+                                                        .categoryName,
+                                                    docSnap[index][
+                                                    'Authar Name'],
+                                                    docSnap[index][
+                                                    'Book Pages'],
+                                                    docSnap[index][
+                                                    'Language'],
+                                                    docSnap[index][
+                                                    'Quantity'])),
+                                      );
+                                    },
+                                    child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                10)),
+                                        color: Colors.grey[300],
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment
+                                              .spaceBetween,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment
+                                              .start,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment
+                                                  .start,
+                                              children: [
+                                                ClipRRect(
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(
+                                                        10.0),
+                                                    child: Container(
+                                                        width: MediaQuery.of(
+                                                            context)
+                                                            .size
+                                                            .width *
+                                                            0.3,
+                                                        height: MediaQuery.of(
+                                                            context)
+                                                            .size
+                                                            .height *
+                                                            0.21,
+                                                        child: Image
+                                                            .network(
+                                                          docSnap[index][
+                                                          'Image URL'],
+                                                          fit: BoxFit
+                                                              .fill,
+                                                        ))),
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      MediaQuery.of(
+                                                          context)
+                                                          .size
+                                                          .width *
+                                                          0.05,
+                                                      MediaQuery.of(
+                                                          context)
+                                                          .size
+                                                          .height *
+                                                          0.02,
+                                                      0,
+                                                      0),
+                                                  child: Container(
+                                                    width: MediaQuery.of(
+                                                        context)
+                                                        .size
+                                                        .width *
+                                                        0.45,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        Text(
+                                                          docSnap[index][
+                                                          'Book Name'],
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                              MediaQuery.of(context).size.width *
+                                                                  0.05,
+                                                              fontWeight:
+                                                              FontWeight.bold),
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                              0.005,
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                              0.005,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Icon(Icons
+                                                                .currency_rupee),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(context).size.width *
+                                                                  0.02,
+                                                            ),
+                                                            Text.rich(
+                                                                TextSpan(
+                                                                    children: [
+                                                                      TextSpan(
+                                                                          text: docSnap[index]['MRP'],
+                                                                          style: TextStyle(decoration: TextDecoration.lineThrough, fontSize: MediaQuery.of(context).size.width * 0.04)),
+                                                                      TextSpan(text: '    '),
+                                                                      TextSpan(
+                                                                          text: docSnap[index]['Discounted Price'],
+                                                                          style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05, fontWeight: FontWeight.bold)),
+                                                                    ])),
+                                                          ],
+                                                        ),
+                                                        Text.rich(
+                                                            TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                      'Auther :  ',
+                                                                      style:
+                                                                      TextStyle(
+                                                                        fontSize: MediaQuery.of(context).size.width * 0.045,
+                                                                      )),
+                                                                  TextSpan(
+                                                                      text:
+                                                                      docSnap[index]['Authar Name'],
+                                                                      style: TextStyle(
+                                                                        fontSize: MediaQuery.of(context).size.width * 0.045,
+                                                                      )),
+                                                                ])),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(context)
+                                                              .size
+                                                              .height *
+                                                              0.005,
+                                                        ),
+                                                        Text.rich(
+                                                            TextSpan(
+                                                                children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                      'Language :  ',
+                                                                      style:
+                                                                      TextStyle(
+                                                                        fontSize: MediaQuery.of(context).size.width * 0.045,
+                                                                      )),
+                                                                  TextSpan(
+                                                                      text:
+                                                                      docSnap[index]['Language'],
+                                                                      style: TextStyle(
+                                                                        fontSize: MediaQuery.of(context).size.width * 0.045,
+                                                                      )),
+                                                                ])),
+                                                      Row(
+                                                        children: [
+                                                          IconButton(
+                                                              onPressed: () {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => EditProduct(
+                                                                          widget
+                                                                              .categoryName,
+                                                                          docSnap[index][
+                                                                          'Book Name'],
+                                                                          docSnap[index][
+                                                                          'Authar Name'],
+                                                                          docSnap[index][
+                                                                          'MRP'],
+                                                                          docSnap[index][
+                                                                          'Discounted Price'],
+                                                                          docSnap[index][
+                                                                          'Book Pages'],
+                                                                          docSnap[index][
+                                                                          'Language'],
+                                                                          docSnap[index]
+                                                                              .id,
+                                                                          docSnap[index][
+                                                                          'Quantity'],
+                                                                          docSnap[index][
+                                                                          'Image URL']
+                                                                      )),
+                                                                );
+                                                              },
+                                                              icon: Icon(
+                                                                Icons.edit,
+                                                                color: Colors.green,
+                                                              )),
+                                                          IconButton(
+                                                              onPressed: () async{
+                                                                final storageref = FirebaseStorage.instance;
+                                                                await userCollection.doc(docSnap[index].id).delete().then((e) {
+                                                                  Fluttertoast.showToast(
+                                                                    msg: 'Book Deleted Successfully',
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.BOTTOM,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.blueGrey,
+                                                                    fontSize: 16,
+                                                                  );
+                                                                }).onError((error, stackTrace) {
+                                                                  Fluttertoast.showToast(
+                                                                    msg: error.toString(),
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.BOTTOM,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.blueGrey,
+                                                                    fontSize: 16,
+                                                                  );
+                                                                });
+
+                                                                await storageref.ref('BookImage/' + widget.categoryName + '/' + docSnap[index]['Book Name']).delete().then((value) {
+                                                                  Fluttertoast.showToast(
+                                                                    msg: 'Image Deleted Successfully',
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.BOTTOM,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.blueGrey,
+                                                                    fontSize: 16,
+                                                                  );
+                                                                }).onError((error, stackTrace) {
+                                                                  Fluttertoast.showToast(
+                                                                    msg: 'Book Image Delete in Error',
+                                                                    toastLength: Toast.LENGTH_LONG,
+                                                                    gravity: ToastGravity.BOTTOM,
+                                                                    textColor: Colors.white,
+                                                                    backgroundColor: Colors.blueGrey,
+                                                                    fontSize: 16,
+                                                                  );
+                                                                });
+                                                              },
+                                                              icon: Icon(
+                                                                Icons.delete,
+                                                                color: Colors.red,
+                                                              ))
+                                                        ],
+                                                      ),
+                                                        SizedBox(
+                                                          height: 10,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0,
+                                                  MediaQuery.of(
+                                                      context)
+                                                      .size
+                                                      .height *
+                                                      0.03,
+                                                  MediaQuery.of(
+                                                      context)
+                                                      .size
+                                                      .height *
+                                                      0.01,
+                                                  0),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: MediaQuery.of(
+                                                        context)
+                                                        .size
+                                                        .height *
+                                                        0.1,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                    ],
+                  );
+                }),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+}

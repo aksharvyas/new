@@ -1,0 +1,32 @@
+	                       API's not integrated
+
+1. {{baseapi}}Production/addproduction -- i
+2. {{baseapi}}Production/testproduction
+3. {{baseapi}}Production/pairproduction -- i
+4. {{baseapi}}AppUserAccessPermission/appuseraccesspermissionhome
+5. {{baseapi}}AppUserAccessPermission/appuseraccesspermissionroom
+6. {{baseapi}}AppUserAccessPermission/appuseraccesspermissiongivenbyyou
+7. {{baseapi}}AppUserAccessPermission/deleteappuseraccesspermission
+8. {{baseapi}}AppUserAccessPermission/changeownershipappuseraccesspermission
+9. {{baseapi}}AppUser/logout
+10. {{baseapi}}AppUser/verifyrefereshtoken
+11. {{baseapi}}RoomCmac/updateroomcmacswitchnamebyid
+12. {{baseapi}}Schedule/ScheduleDeletedSceneAction
+13. {{baseapi}}Schedule/ScheduleGetSchedulebyid
+14. {{baseapi}}Log/addlogs
+15. {{baseapi}}Log/logswitches
+16. {{baseapi}}Log/LogScene
+17. {{baseapi}}Company/addcompany
+18. {{baseapi}}Company/updatecompany
+19. {{baseapi}}Company/deletecompany
+20. {{baseapi}}Company/listcompany
+21. {{baseapi}}Company/addusers
+22. {{baseapi}}Company/updateusers
+23. {{baseapi}}Company/deleteusers
+24. {{baseapi}}Company/listusers
+25. {{baseapi}}Switch/listswitch  -- i
+26. {{baseapi}}Switch/deleteswitch
+27. {{baseapi}}DeviceSwitches/listdeviceswitches  -- i -- admin
+28. {{baseapi}}DeviceSwitches/adddeviceswitches
+29. {{baseapi}}DeviceSwitches/updatedeviceswitches
+30. {{baseapi}}DeviceSwitches/deletedeviceswitches
